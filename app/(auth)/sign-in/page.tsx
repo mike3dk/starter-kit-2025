@@ -145,6 +145,15 @@ export default function PageSignIn() {
               Forgot password?
             </Link>
           </div>
+          <div className="mt-4 text-center text-sm">
+            Don't have an account?{" "}
+            <Link
+              href="/sign-up"
+              className="text-primary font-medium hover:underline"
+            >
+              Sign up
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
