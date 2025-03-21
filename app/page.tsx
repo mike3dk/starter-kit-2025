@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import type { Test } from "@prisma/client"
 import { Button } from "@/components/ui/button"
+import AuthButtons from "@/components/auth-buttons"
 
 export default async function Home() {
   const tests = await prisma.test.findMany()
@@ -14,6 +15,9 @@ export default async function Home() {
         ))}
       </div>
       <Button>Click me!</Button>
+      <div className="p-4">
+        <AuthButtons />
+      </div>
     </div>
   )
 }
