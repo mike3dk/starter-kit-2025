@@ -1,0 +1,30 @@
+{
+  "title": "Starter Kit",
+  "description": "Starter Kit is a starter kit for a new project.",
+  "loading": "Loading...",
+
+  "click-me": "Click me",
+  "logged-as": "You are logged in as",
+  "sign-in": "Sign In",
+  "sign-up": "Sign Up",
+  "sign-out": "Sign out",
+  "name": "Name",
+  "email": "Email",
+  "password": "Password",
+  "enter-your": "Enter your",
+  "continue-with-github": "Continue with GitHub",
+  "forgot-password": "Forgot Password",
+  "send-reset-link": "Send Reset Link",
+  "reset-password": "Reset Password",
+  "invalid-reset-link": "Invalid Reset Link",
+  "new-password": "New Password",
+  "confirm-password": "Confirm Password",
+  "confirm-your-new-password": "Confirm your new password",
+  "create-account": "Create Account",
+  "already-have-account": "Already have an account? Sign in",
+
+  "sort": "Sort",
+  "grid": "Grid",
+  "table": "Table",
+  "list": "List"
+}

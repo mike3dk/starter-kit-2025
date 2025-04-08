@@ -1,0 +1,30 @@
+{
+  "title": "스타터 킷",
+  "description": "스타터 킷은 새로운 프로젝트를 위한 스타터 킷입니다.",
+  "loading": "로딩중...",
+
+  "click-me": "클릭",
+  "logged-as": "로그인 중인 사용자 : ",
+  "sign-in": "로그인",
+  "sign-up": "회원가입",
+  "sign-out": "로그아웃",
+  "name": "이름",
+  "email": "이메일",
+  "password": "비밀번호",
+  "enter-your": "입력",
+  "continue-with-github": "깃허브로 로그인",
+  "forgot-password": "비밀번호 찾기",
+  "send-reset-link": "비밀번호 재설정 링크 보내기",
+  "reset-password": "비밀번호 재설정",
+  "invalid-reset-link": "유효하지 않은 비밀번호 재설정 링크",
+  "new-password": "새 비밀번호",
+  "confirm-password": "비밀번호 확인",
+  "confirm-your-new-password": "재 입력 새 비밀번호 ",
+  "create-account": "계정 만들기",
+  "already-have-account": "이미 계정이 있습니까? 로그인",
+
+  "sort": "정렬",
+  "grid": "그리드",
+  "table": "테이블",
+  "list": "리스트"
+}
