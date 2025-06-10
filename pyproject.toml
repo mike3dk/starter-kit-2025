@@ -8,6 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = "~3.11"
 dependencies = [
+    "alembic (>=1.16.1,<2.0.0)"
 ]
 
 [tool.poetry]
