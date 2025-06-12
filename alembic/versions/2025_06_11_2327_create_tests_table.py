@@ -19,8 +19,16 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    pass
+    op.execute(
+        """
+        CREATE TABLE tests (
+            id INTEGER PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+        )
+        """
+    )
+
 
 
 def downgrade() -> None:
-    pass
+    op.execute("DROP TABLE tests")
