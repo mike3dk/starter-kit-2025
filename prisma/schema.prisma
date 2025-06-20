@@ -11,7 +11,9 @@ model alembic_version {
   version_num String @id(map: "alembic_version_pkc") @db.VarChar(32)
 }
 
-model tests {
+model Test {
   id   Int    @id
   name String @db.VarChar(255)
+  
+  @@map("tests")
 }
