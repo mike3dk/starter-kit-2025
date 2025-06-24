@@ -10,7 +10,7 @@ requires-python = "~3.11"
 dependencies = [
     "alembic (>=1.16.1,<2.0.0)",
     "psycopg2-binary (>=2.9.10,<3.0.0)",
-    "prisma (>=0.15.0,<0.16.0)"
+    "prisma @ git+https://github.com/mike3dk/prisma-client-py.git@v0.16.0"
 ]
 
 [tool.poetry]
