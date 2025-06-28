@@ -3,7 +3,7 @@ generator client-js {
 }
 
 generator client-py {
-  provider = "prisma-client-py"
+  provider             = "prisma-client-py"
   interface            = "asyncio"
   recursive_type_depth = "5"
 }
@@ -20,6 +20,56 @@ model alembic_version {
 model Test {
   id   Int    @id
   name String @db.VarChar(255)
-  
+
   @@map("tests")
+}
+
+model accounts {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  users                 users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model sessions {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id            String     @id
+  name          String
+  email         String     @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  accounts      accounts[]
+  sessions      sessions[]
+}
+
+model verifications {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
 }
