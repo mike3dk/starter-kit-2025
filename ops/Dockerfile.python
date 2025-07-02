@@ -1,0 +1,36 @@
+FROM python:3.11-slim
+
+RUN apt-get update \
+    && apt-get install -y gcc libglpk-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG POETRY_VERSION=2.1.1
+
+RUN pip install "poetry==$POETRY_VERSION"
+
+ENV APP_DIR=/app
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+WORKDIR $APP_DIR
+
+ADD pyproject.toml $APP_DIR
+ADD poetry.lock $APP_DIR
+
+# Mount SSH credentials for private dependency installation.
+# Use "--no-root" to avoid installing "src"
+# (do not make dependency installation layer caching depend on "src" code)
+# Run "poetry clear" to delete cache files and reduce image size.
+# RUN --mount=type=ssh poetry install --no-root --no-interaction --no-ansi -vvv \
+#     && rm -rf $VIRTUAL_ENV/src/
+RUN poetry install --no-root --no-interaction --no-ansi -vvv \
+    && yes | poetry cache clear . --all \
+    && rm -rf /opt/venv/src/
+
+COPY . .
+
+RUN prisma generate --generator client-py
+
+ENV PYTHONPATH=/app
