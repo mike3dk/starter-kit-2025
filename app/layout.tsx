@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import MicrosoftClarity from "./metrics/MicrosoftClarity"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,7 +21,10 @@ export default function RootLayout({
           src="https://plausible.starliz.com/js/script.js"
         ></script>
       </head>
-      <body className="">{children}</body>
+      <body className="">
+        {children}
+        <MicrosoftClarity />
+      </body>
     </html>
   )
 }
