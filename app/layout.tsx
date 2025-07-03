@@ -13,6 +13,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          defer
+          data-domain="mealpuzzler.com"
+          src="https://plausible.starliz.com/js/script.js"
+        ></script>
+      </head>
       <body className="">{children}</body>
     </html>
   )
