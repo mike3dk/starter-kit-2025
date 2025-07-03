@@ -1,4 +1,4 @@
-"""create users table
+"""create better auth users table
 
 Revision ID: acc64cf8fef4
 Revises: f9ee08773633
@@ -7,7 +7,6 @@ Create Date: 2025-06-26 22:14:56.314403
 """
 
 from typing import Sequence, Union
-
 
 from alembic import op
 
