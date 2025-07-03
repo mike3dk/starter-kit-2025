@@ -1,0 +1,29 @@
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+test:
+  stage: test
+  image: nikolaik/python-nodejs:python3.11-nodejs22
+  services:
+    - name: postgres:17-alpine
+  variables:
+    POSTGRES_DB: mealpuzzler
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_HOST_AUTH_METHOD: trust
+  script: |
+    poetry install
+    export DATABASE_URL="postgresql://postgres:postgres@postgres/mealpuzzler"
+    poetry run alembic upgrade head
+    poetry run alembic downgrade base
+    poetry run alembic upgrade head
+    npm i
+    npx prettier --check .
+    npx prisma db pull
+    npx prisma generate --generator client-js 
+    npm run build
+    # npx playwright test
