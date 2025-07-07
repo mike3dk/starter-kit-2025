@@ -6,7 +6,7 @@ export default async function Home() {
   const tests = await prisma.test.findMany()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex h-screen flex-col items-center justify-center">
       starter kit
       <div className="mb-4">
         {tests.map((test: Test) => (
