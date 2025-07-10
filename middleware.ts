@@ -9,7 +9,7 @@ const adminRoutes = ["/admin"]
 export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname
 
-  console.log("Request Path:", pathName)
+  // console.log("Request Path:", pathName)
   const isAuthRoute = authRoutes.includes(pathName)
   const isPasswordRoute = passwordRoutes.includes(pathName)
   const isAdminRoute = adminRoutes.includes(pathName)
@@ -25,10 +25,10 @@ export default async function authMiddleware(request: NextRequest) {
       }
     )
 
-    console.log("Session Data:", JSON.stringify(session, null, 2))
+    // console.log("Session Data:", JSON.stringify(session, null, 2))
 
     if (!session) {
-      console.log("No session found, redirecting to sign-in")
+      // console.log("No session found, redirecting to sign-in")
       if (isAuthRoute || isPasswordRoute) {
         return NextResponse.next()
       }
@@ -39,7 +39,7 @@ export default async function authMiddleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url))
     }
 
-    console.log("User Data:", JSON.stringify(session?.user, null, 2))
+    // console.log("User Data:", JSON.stringify(session?.user, null, 2))
     if (isAdminRoute) {
       if (!session?.user?.role || session.user.role.toLowerCase() !== "admin") {
         return NextResponse.redirect(new URL("/", request.url))
