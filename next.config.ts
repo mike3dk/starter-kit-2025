@@ -1,4 +1,9 @@
 import type { NextConfig } from "next"
+import createNextIntlPlugin from "next-intl/plugin"
+
+const withNextIntl = createNextIntlPlugin()
+
+const isDev = process.env.NODE_ENV === "local"
 
 const cspHeader = [
   "default-src 'self'",
@@ -6,14 +11,16 @@ const cspHeader = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data:",
   "font-src 'self'",
-  "connect-src 'self' https://fastapi.mealpuzzler.com https://plausible.starliz.com",
+  // Different connect-src for dev vs production
+  isDev
+    ? "connect-src 'self' http://localhost:3000 ws://localhost:3000 https://fastapi.mealpuzzler.com https://plausible.starliz.com"
+    : "connect-src 'self' https://fastapi.mealpuzzler.com https://plausible.starliz.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
   "upgrade-insecure-requests",
 ].join("; ")
-
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -28,7 +35,6 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
-
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

@@ -19,8 +19,10 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
+import { useTranslations } from "next-intl"
 
 export default function PageSignUp() {
+  const t = useTranslations()
   const [pending, setPending] = useState(false)
 
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -45,17 +47,33 @@ export default function PageSignUp() {
           setPending(true)
         },
         onSuccess: () => {
-          toast(
-            "Your account has been created. Check your email for a verification link."
-          )
+          toast(t("account-created-verify-email"))
         },
         onError: (ctx) => {
           console.log("error", ctx)
-          toast.error(ctx.error.message ?? "Something went wrong.")
+          toast.error(ctx.error.message ?? t("something-went-wrong"))
         },
       }
     )
     setPending(false)
+  }
+
+  const getFieldLabel = (field: string) => {
+    switch (field) {
+      case "confirmPassword":
+        return t("confirm-password")
+      default:
+        return t(field as any)
+    }
+  }
+
+  const getFieldPlaceholder = (field: string) => {
+    switch (field) {
+      case "confirmPassword":
+        return t("confirm-your-new-password")
+      default:
+        return `${t("enter-your")} ${t(field as any).toLowerCase()}`
+    }
   }
 
   return (
@@ -63,7 +81,7 @@ export default function PageSignUp() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold text-gray-800">
-            Create Account
+            {t("create-account")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -76,9 +94,7 @@ export default function PageSignUp() {
                   name={field as keyof z.infer<typeof signUpSchema>}
                   render={({ field: fieldProps }) => (
                     <FormItem>
-                      <FormLabel>
-                        {field.charAt(0).toUpperCase() + field.slice(1)}
-                      </FormLabel>
+                      <FormLabel>{getFieldLabel(field)}</FormLabel>
                       <FormControl>
                         <Input
                           type={
@@ -88,7 +104,7 @@ export default function PageSignUp() {
                                 ? "email"
                                 : "text"
                           }
-                          placeholder={`Enter your ${field}`}
+                          placeholder={getFieldPlaceholder(field)}
                           {...fieldProps}
                           autoComplete="off"
                         />
@@ -98,12 +114,12 @@ export default function PageSignUp() {
                   )}
                 />
               ))}
-              <LoadingButton pending={pending}>Sign up</LoadingButton>
+              <LoadingButton pending={pending}>{t("sign-up")}</LoadingButton>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">
             <Link href="/sign-in" className="text-primary hover:underline">
-              Already have an account? Sign in
+              {t("already-have-account")}
             </Link>
           </div>
         </CardContent>
