@@ -1,22 +1,23 @@
 import { buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 
 export default async function PageEmailVerified() {
+  const t = await getTranslations()
+
   return (
     <div className="flex grow flex-col items-center justify-center p-4">
       <h1 className="mb-4 text-2xl font-bold text-green-500">
-        Email Verified!
+        {t("email-verified")}
       </h1>
-      <p className="mb-4 text-gray-600">
-        Your email has been successfully verified.
-      </p>
+      <p className="mb-4 text-gray-600">{t("email-verified-message")}</p>
       <Link
         href="/"
         className={buttonVariants({
           variant: "default",
         })}
       >
-        Go to home
+        {t("go-to-home")}
       </Link>
     </div>
   )

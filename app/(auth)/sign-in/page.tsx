@@ -24,8 +24,10 @@ import { toast } from "sonner"
 
 import { ErrorContext } from "@better-fetch/fetch"
 import { GithubIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 export default function PageSignIn() {
+  const t = useTranslations()
   const router = useRouter()
   const [pendingCredentials, setPendingCredentials] = useState(false)
   const [pendingGithub, setPendingGithub] = useState(false)
@@ -56,7 +58,7 @@ export default function PageSignIn() {
         },
         onError: (ctx: ErrorContext) => {
           console.log(ctx)
-          toast.error(ctx.error.message ?? "Something went wrong.")
+          toast.error(ctx.error.message ?? t("something-went-wrong"))
         },
       }
     )
@@ -77,7 +79,7 @@ export default function PageSignIn() {
           router.refresh()
         },
         onError: (ctx: ErrorContext) => {
-          toast.error(ctx.error.message ?? "Something went wrong.")
+          toast.error(ctx.error.message ?? t("something-went-wrong"))
         },
       }
     )
@@ -89,7 +91,7 @@ export default function PageSignIn() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold text-gray-800">
-            Sign In
+            {t("sign-in")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -105,13 +107,11 @@ export default function PageSignIn() {
                   name={field as keyof z.infer<typeof signInSchema>}
                   render={({ field: fieldProps }) => (
                     <FormItem>
-                      <FormLabel>
-                        {field.charAt(0).toUpperCase() + field.slice(1)}
-                      </FormLabel>
+                      <FormLabel>{t(field as any)}</FormLabel>
                       <FormControl>
                         <Input
                           type={field === "password" ? "password" : "email"}
-                          placeholder={`Enter your ${field}`}
+                          placeholder={`${t("enter-your")} ${t(field as any).toLowerCase()}`}
                           {...fieldProps}
                           autoComplete={
                             field === "password" ? "current-password" : "email"
@@ -124,7 +124,7 @@ export default function PageSignIn() {
                 />
               ))}
               <LoadingButton pending={pendingCredentials}>
-                Sign in
+                {t("sign-in")}
               </LoadingButton>
             </form>
           </Form>
@@ -134,7 +134,7 @@ export default function PageSignIn() {
               onClick={handleSignInWithGithub}
             >
               <GithubIcon className="mr-2 h-4 w-4" />
-              Continue with GitHub
+              {t("continue-with-github")}
             </LoadingButton>
           </div>
           <div className="mt-4 text-center text-sm">
@@ -142,16 +142,16 @@ export default function PageSignIn() {
               href="/forgot-password"
               className="text-primary hover:underline"
             >
-              Forgot password?
+              {t("forgot-password-question")}
             </Link>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don't have an account?{" "}
+            {t("dont-have-account")}{" "}
             <Link
               href="/sign-up"
               className="text-primary font-medium hover:underline"
             >
-              Sign up
+              {t("sign-up")}
             </Link>
           </div>
         </CardContent>

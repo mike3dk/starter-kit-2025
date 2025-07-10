@@ -2,6 +2,7 @@
   "title": "Starter Kit",
   "description": "Starter Kit is a starter kit for a new project.",
   "loading": "Loading...",
+  "tests": "Tests",
 
   "click-me": "Click me",
   "logged-as": "You are logged in as",
@@ -26,5 +27,17 @@
   "sort": "Sort",
   "grid": "Grid",
   "table": "Table",
-  "list": "List"
+  "list": "List",
+
+  "dont-have-account": "Don't have an account?",
+  "forgot-password-question": "Forgot password?",
+  "something-went-wrong": "Something went wrong.",
+  "account-created-verify-email": "Your account has been created. Check your email for a verification link.",
+  "reset-link-sent": "If an account exists with this email, you will receive a password reset link.",
+  "invalid-reset-link-message": "This password reset link is invalid or has expired.",
+  "password-reset-success": "Password reset successful. Login to continue.",
+  "email-verified": "Email Verified!",
+  "email-verified-message": "Your email has been successfully verified.",
+  "go-to-home": "Go to home",
+  "enter-new-password": "Enter your new password"
 }

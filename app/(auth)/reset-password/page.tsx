@@ -19,8 +19,10 @@ import { Suspense, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
+import { useTranslations } from "next-intl"
 
 function ResetPasswordContent() {
+  const t = useTranslations()
   const router = useRouter()
   const searchParams = useSearchParams()
   const error = searchParams.get("error")
@@ -43,7 +45,7 @@ function ResetPasswordContent() {
     if (error) {
       toast.error(`xxx => ${error.message}`)
     } else {
-      toast.success("Password reset successful. Login to continue.")
+      toast.success(t("password-reset-success"))
       router.push("/sign-in")
     }
     setIsPending(false)
@@ -55,13 +57,13 @@ function ResetPasswordContent() {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-center text-3xl font-bold text-gray-800">
-              Invalid Reset Link
+              {t("invalid-reset-link")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <p className="text-center text-gray-600">
-                This password reset link is invalid or has expired.
+                {t("invalid-reset-link-message")}
               </p>
             </div>
           </CardContent>
@@ -75,7 +77,7 @@ function ResetPasswordContent() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold text-gray-800">
-            Reset Password
+            {t("reset-password")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -86,11 +88,11 @@ function ResetPasswordContent() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New Password</FormLabel>
+                    <FormLabel>{t("new-password")}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Enter your new password"
+                        placeholder={t("enter-new-password")}
                         {...field}
                       />
                     </FormControl>
@@ -104,11 +106,11 @@ function ResetPasswordContent() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>{t("confirm-password")}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Confirm your new password"
+                        placeholder={t("confirm-your-new-password")}
                         {...field}
                       />
                     </FormControl>
@@ -117,7 +119,9 @@ function ResetPasswordContent() {
                 )}
               />
 
-              <LoadingButton pending={isPending}>Reset Password</LoadingButton>
+              <LoadingButton pending={isPending}>
+                {t("reset-password")}
+              </LoadingButton>
             </form>
           </Form>
         </CardContent>
