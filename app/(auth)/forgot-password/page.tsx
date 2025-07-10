@@ -18,8 +18,10 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
+import { useTranslations } from "next-intl"
 
 export default function PageForgotPassword() {
+  const t = useTranslations()
   const [isPending, setIsPending] = useState(false)
 
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
@@ -39,9 +41,7 @@ export default function PageForgotPassword() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast(
-        "If an account exists with this email, you will receive a password reset link."
-      )
+      toast(t("reset-link-sent"))
     }
     setIsPending(false)
   }
@@ -51,7 +51,7 @@ export default function PageForgotPassword() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold text-gray-800">
-            Forgot Password
+            {t("forgot-password")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -62,11 +62,11 @@ export default function PageForgotPassword() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("email")}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder={`${t("enter-your")} ${t("email").toLowerCase()}`}
                         {...field}
                         autoComplete="email"
                       />
@@ -75,7 +75,9 @@ export default function PageForgotPassword() {
                   </FormItem>
                 )}
               />
-              <LoadingButton pending={isPending}>Send Reset Link</LoadingButton>
+              <LoadingButton pending={isPending}>
+                {t("send-reset-link")}
+              </LoadingButton>
             </form>
           </Form>
         </CardContent>

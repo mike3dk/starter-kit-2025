@@ -4,8 +4,10 @@ import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import LoadingButton from "@/components/loading-button"
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 
 export default function SignoutButton() {
+  const t = useTranslations()
   const router = useRouter()
   const [pending, setPending] = useState(false)
 
@@ -29,7 +31,7 @@ export default function SignoutButton() {
 
   return (
     <LoadingButton pending={pending} onClick={handleSignOut}>
-      Sign Out
+      {t("sign-out")}
     </LoadingButton>
   )
 }
