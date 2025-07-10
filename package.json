@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "fastapi": "uvicorn src.fastapi.main:app --host 0.0.0.0 --port 4028 --reload",
-    "rq": "rq worker --with-scheduler"
+    "rq": "rq worker --with-scheduler",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:auth": "playwright test tests/auth-*.spec.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -36,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.53.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.17",
