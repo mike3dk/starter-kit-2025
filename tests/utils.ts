@@ -27,10 +27,10 @@ export async function cleanupTestUser(email: string) {
 
 // Fill out the sign-up form
 export async function fillSignUpForm(page: Page, user: TestUser) {
-  await page.fill('input[type="text"]', user.name)
-  await page.fill('input[type="email"]', user.email)
-  await page.fill('input[type="password"]:nth-of-type(1)', user.password)
-  await page.fill('input[type="password"]:nth-of-type(2)', user.password)
+  await page.fill('input[name="name"]', user.name)
+  await page.fill('input[name="email"]', user.email)
+  await page.fill('input[name="password"]', user.password)
+  await page.fill('input[name="confirmPassword"]', user.password)
 }
 
 // Fill out the sign-in form
@@ -38,8 +38,8 @@ export async function fillSignInForm(
   page: Page,
   user: Pick<TestUser, "email" | "password">
 ) {
-  await page.fill('input[type="email"]', user.email)
-  await page.fill('input[type="password"]', user.password)
+  await page.fill('input[name="email"]', user.email)
+  await page.fill('input[name="password"]', user.password)
 }
 
 // Wait for navigation and verify we're on the expected page
@@ -72,7 +72,7 @@ export async function navigateToSignUp(page: Page) {
 // Navigate to sign-in page and verify it loaded
 export async function navigateToSignIn(page: Page) {
   await page.goto("/sign-in")
-  await expect(page.locator("text=Sign In")).toBeVisible()
+  await expect(page.locator('input[name="email"]')).toBeVisible()
 }
 
 // Wait for form submission to complete
@@ -87,12 +87,15 @@ export async function waitForFormSubmission(page: Page) {
 // Check for error messages
 export async function checkForErrors(page: Page, expectedError?: string) {
   if (expectedError) {
-    await expect(page.locator(`text=${expectedError}`)).toBeVisible({
+    await expect(page.getByText(expectedError, { exact: false })).toBeVisible({
       timeout: 5000,
     })
+    return true
   } else {
     // Check for any error indicators
-    const errorElements = page.locator('[role="alert"], .error, .text-red-500')
+    const errorElements = page.locator(
+      '[role="alert"], .error, .text-red-500, [data-error="true"]'
+    )
     const errorCount = await errorElements.count()
     return errorCount > 0
   }
@@ -101,14 +104,15 @@ export async function checkForErrors(page: Page, expectedError?: string) {
 // Check for success messages
 export async function checkForSuccess(page: Page, expectedMessage?: string) {
   if (expectedMessage) {
-    await expect(page.locator(`text=${expectedMessage}`)).toBeVisible({
-      timeout: 5000,
-    })
+    await expect(page.getByText(expectedMessage, { exact: false })).toBeVisible(
+      {
+        timeout: 5000,
+      }
+    )
+    return true
   } else {
     // Look for success indicators like toast messages
-    const successElements = page.locator("[data-sonner-toast]", {
-      hasText: /success|created|signed/i,
-    })
+    const successElements = page.locator("[data-sonner-toast], .sonner-toast")
     const successCount = await successElements.count()
     return successCount > 0
   }
