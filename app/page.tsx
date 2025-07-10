@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma"
-import type { Test } from "@prisma/client"
-import { Button } from "@/components/ui/button"
+
 import AuthButtons from "@/components/auth-buttons"
+import { Button } from "@/components/ui/button"
+import type { Test } from "@prisma/client"
+import Link from "next/link"
 
 export default async function Home() {
   const tests = await prisma.test.findMany()

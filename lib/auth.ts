@@ -1,8 +1,8 @@
 import { betterAuth, BetterAuthOptions } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
-import { prisma } from "./prisma"
-import { openAPI } from "better-auth/plugins"
+import { admin, openAPI } from "better-auth/plugins"
 import { sendEmail } from "./email"
+import { prisma } from "./prisma"
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -36,7 +36,12 @@ export const auth = betterAuth({
       },
     },
   },
-  plugins: [openAPI()], // /api/auth/reference
+  plugins: [
+    openAPI(),
+    admin({
+      impersonationSessionDuration: 60 * 60 * 24 * 7, // 7 days
+    }),
+  ], // /api/auth/reference
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
