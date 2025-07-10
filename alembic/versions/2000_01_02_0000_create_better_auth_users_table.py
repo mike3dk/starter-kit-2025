@@ -26,6 +26,10 @@ def upgrade() -> None:
             email text NOT NULL,
             "emailVerified" bool NOT NULL,
             image text NULL,
+            role text NOT NULL default 'user',
+            banned boolean default false,
+            banReason text NULL,
+            banExpires timestamp(3),
             "createdAt" timestamp(3) NOT NULL,
             "updatedAt" timestamp(3) NOT NULL,
             CONSTRAINT users_pkey PRIMARY KEY (id)
@@ -41,6 +45,7 @@ def upgrade() -> None:
             "ipAddress" text NULL,
             "userAgent" text NULL,
             "userId" text NOT NULL,
+            "impersonatedBy" text NULL,
             CONSTRAINT sessions_pkey PRIMARY KEY (id),
             CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
