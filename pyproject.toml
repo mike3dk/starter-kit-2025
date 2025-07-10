@@ -11,7 +11,8 @@ dependencies = [
     "psycopg2-binary (>=2.9.10,<3.0.0)",
     "prisma @ git+https://github.com/mike3dk/prisma-client-py.git@v0.16.1",
     "fastapi (>=0.116.0,<0.117.0)",
-    "uvicorn (>=0.35.0,<0.36.0)"
+    "uvicorn (>=0.35.0,<0.36.0)",
+    "rq (>=2.4.0,<3.0.0)"
 ]
 
 [tool.poetry]
