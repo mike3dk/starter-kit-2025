@@ -1,5 +1,6 @@
 "use client"
 
+import LoadingButton from "@/components/loading-button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Form,
@@ -10,22 +11,21 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import LoadingButton from "@/components/loading-button"
 import { signInSchema } from "@/lib/zod"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import Link from "next/link"
-import { useState } from "react"
 import { authClient } from "@/lib/auth-client"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { toast } from "sonner"
 
 import { ErrorContext } from "@better-fetch/fetch"
 import { GithubIcon } from "lucide-react"
 
-export default function SignIn() {
+export default function PageSignIn() {
   const router = useRouter()
   const [pendingCredentials, setPendingCredentials] = useState(false)
   const [pendingGithub, setPendingGithub] = useState(false)

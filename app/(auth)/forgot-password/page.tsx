@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import LoadingButton from "@/components/loading-button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Form,
@@ -11,15 +11,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import LoadingButton from "@/components/loading-button"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { authClient } from "@/lib/auth-client"
-import { toast } from "sonner"
 import { forgotPasswordSchema } from "@/lib/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-export default function ForgotPassword() {
+export default function PageForgotPassword() {
   const [isPending, setIsPending] = useState(false)
 
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({

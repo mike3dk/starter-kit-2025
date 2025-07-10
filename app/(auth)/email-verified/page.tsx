@@ -1,9 +1,9 @@
 import { buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
 
-export default async function EmailVerifiedPage() {
+export default async function PageEmailVerified() {
   return (
-    <div className="flex flex-col items-center justify-center grow p-4">
+    <div className="flex grow flex-col items-center justify-center p-4">
       <h1 className="mb-4 text-2xl font-bold text-green-500">
         Email Verified!
       </h1>

@@ -39,7 +39,7 @@ test.describe("Basic Auth Tests", () => {
     // Wait for either success or error
     await page.waitForTimeout(3000)
 
-    // The test passes if no error occurs (we're not checking specific success messages)
+    // The test passes if no error occurs
     console.log("Sign up completed for:", testUser.email)
   })
 
@@ -57,7 +57,7 @@ test.describe("Basic Auth Tests", () => {
     // Click submit button and check for loading state
     await page.click('button:text("Sign up")')
 
-    // Check for loading state (button should be disabled or show loading)
+    // Check for loading state (button should be disabled)
     const submitButton = page.getByRole("button", { name: "Sign up" })
     await expect(submitButton).toBeDisabled()
 
