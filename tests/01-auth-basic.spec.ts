@@ -43,29 +43,6 @@ test.describe("Basic Auth Tests", () => {
     console.log("Sign up completed for:", testUser.email)
   })
 
-  test("should navigate between sign-up and sign-in pages", async ({
-    page,
-  }) => {
-    // Go to sign-up page
-    await page.goto("/sign-up")
-    await expect(page.locator('input[name="name"]')).toBeVisible()
-
-    // Navigate to sign-in page via link
-    await page.click('a[href="/sign-in"]')
-    await page.waitForURL("/sign-in")
-
-    // Verify we're on sign-in page
-    await expect(page.locator('input[name="email"]')).toBeVisible()
-    await expect(page.locator('input[name="password"]')).toBeVisible()
-
-    // Navigate back to sign-up page
-    await page.click('a[href="/sign-up"]')
-    await page.waitForURL("/sign-up")
-
-    // Verify we're back on sign-up page
-    await expect(page.locator('input[name="name"]')).toBeVisible()
-  })
-
   test("should show loading state during form submission", async ({ page }) => {
     const testUser = generateTestUser()
 

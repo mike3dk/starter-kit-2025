@@ -13,7 +13,7 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
-    "test:auth": "playwright test tests/auth-*.spec.ts"
+    "test:auth": "playwright test tests/01-auth-*.spec.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
