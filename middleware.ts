@@ -5,6 +5,7 @@ import { NextResponse, type NextRequest } from "next/server"
 const authRoutes = ["/sign-in", "/sign-up"]
 const passwordRoutes = ["/reset-password", "/forgot-password"]
 const adminRoutes = ["/admin"]
+const publicRoutes = ["/"]
 
 export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname
@@ -13,6 +14,7 @@ export default async function authMiddleware(request: NextRequest) {
   const isAuthRoute = authRoutes.includes(pathName)
   const isPasswordRoute = passwordRoutes.includes(pathName)
   const isAdminRoute = adminRoutes.includes(pathName)
+  const isPublicRoute = publicRoutes.includes(pathName)
 
   try {
     const { data: session } = await betterFetch<Session>(
@@ -29,7 +31,7 @@ export default async function authMiddleware(request: NextRequest) {
 
     if (!session) {
       // console.log("No session found, redirecting to sign-in")
-      if (isAuthRoute || isPasswordRoute) {
+      if (isAuthRoute || isPasswordRoute || isPublicRoute) {
         return NextResponse.next()
       }
       return NextResponse.redirect(new URL("/sign-in", request.url))
