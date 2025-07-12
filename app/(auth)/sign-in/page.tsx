@@ -23,7 +23,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 
 import { ErrorContext } from "@better-fetch/fetch"
-import { GithubIcon } from "lucide-react"
+import { Github } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 export default function PageSignIn() {
@@ -107,11 +107,11 @@ export default function PageSignIn() {
                   name={field as keyof z.infer<typeof signInSchema>}
                   render={({ field: fieldProps }) => (
                     <FormItem>
-                      <FormLabel>{t(field as any)}</FormLabel>
+                      <FormLabel>{t(field as string)}</FormLabel>
                       <FormControl>
                         <Input
                           type={field === "password" ? "password" : "email"}
-                          placeholder={`${t("enter-your")} ${t(field as any).toLowerCase()}`}
+                          placeholder={`${t("enter-your")} ${t(field as string).toLowerCase()}`}
                           {...fieldProps}
                           autoComplete={
                             field === "password" ? "current-password" : "email"
@@ -133,7 +133,7 @@ export default function PageSignIn() {
               pending={pendingGithub}
               onClick={handleSignInWithGithub}
             >
-              <GithubIcon className="mr-2 h-4 w-4" />
+              <Github className="mr-2 h-4 w-4" />
               {t("continue-with-github")}
             </LoadingButton>
           </div>

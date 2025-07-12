@@ -63,7 +63,7 @@ export default function PageSignUp() {
       case "confirmPassword":
         return t("confirm-password")
       default:
-        return t(field as any)
+        return t(field as string)
     }
   }
 
@@ -72,7 +72,7 @@ export default function PageSignUp() {
       case "confirmPassword":
         return t("confirm-your-new-password")
       default:
-        return `${t("enter-your")} ${t(field as any).toLowerCase()}`
+        return `${t("enter-your")} ${t(field as string).toLowerCase()}`
     }
   }
 
