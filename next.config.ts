@@ -3,7 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin"
 
 const withNextIntl = createNextIntlPlugin()
 
-const isDev = process.env.NODE_ENV === "local"
+const isDev = process.env.NODE_ENV !== "production"
 
 const cspHeader = [
   "default-src 'self'",
