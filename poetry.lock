@@ -395,7 +395,7 @@ files = [
 
 [[package]]
 name = "prisma"
-version = "0.16.1"
+version = "0.16.2"
 description = "Prisma Client Python is an auto-generated and fully type-safe database client"
 optional = false
 python-versions = ">=3.8.0"
@@ -420,8 +420,8 @@ node = ["nodejs-bin"]
 [package.source]
 type = "git"
 url = "https://github.com/mike3dk/prisma-client-py.git"
-reference = "v0.16.1"
-resolved_reference = "5dc7fee827383f570671aa8f41cad329606546f3"
+reference = "v0.16.2"
+resolved_reference = "f27d3f61e1a4175391915c23bd5610f2fe0aa1af"
 
 [[package]]
 name = "psycopg2-binary"
@@ -902,4 +902,4 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "9acf4517e141030549c6400f68c54c9ff2534e3c3feb1aecae9d74280474f982"
+content-hash = "bce2134fa59c5eb93ed33331f44e9ad55f6da691a920adc8d189e909ba169f19"
