@@ -57,17 +57,27 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, token }) => {
-      const verificationUrl = `${process.env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${process.env.EMAIL_VERIFICATION_CALLBACK_URL}`
-      await sendEmail({
+      const verificationUrl = `${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${process.env.EMAIL_VERIFICATION_CALLBACK_URL}`
+      console.log("Sending verification email to:", user.email)
+      console.log("Verification URL:", verificationUrl)
+
+      const result = await sendEmail({
         to: user.email,
         subject: "Verify your email address",
         text: `Click the link to verify your email: ${verificationUrl}`,
       })
+
+      if (result.success) {
+        console.log("Email sent successfully, messageId:", result.messageId)
+      } else {
+        console.error("Failed to send email:", result.error)
+      }
     },
   },
   trustedOrigins: [
-    "https://mealpuzzler.lisa7h.com",
-    "https://mealpuzzler.lisa7h.com/api/auth",
+    "http://localhost:3000",
+    "https://starterkit.com",
+    "https://starterkit.com/api/auth",
     "https://0.0.0.0:4027",
   ],
 } satisfies BetterAuthOptions)
