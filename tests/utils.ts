@@ -117,3 +117,106 @@ export async function checkForSuccess(page: Page, expectedMessage?: string) {
     return successCount > 0
   }
 }
+
+// Wait for alert dialog to appear and verify its content
+export async function waitForAlertDialog(page: Page, expectedMessage?: string) {
+  const dialog = page.locator('[role="alertdialog"]')
+  await expect(dialog).toBeVisible({ timeout: 10000 })
+  
+  if (expectedMessage) {
+    await expect(dialog.getByText(expectedMessage, { exact: false })).toBeVisible()
+  }
+  
+  return dialog
+}
+
+// Click alert dialog action button (OK, etc.)
+export async function clickAlertDialogAction(page: Page, buttonText: string = "OK") {
+  const dialog = page.locator('[role="alertdialog"]')
+  const actionButton = dialog.getByRole("button", { name: buttonText })
+  await expect(actionButton).toBeVisible()
+  await actionButton.click()
+  
+  // Wait for dialog to close
+  await expect(dialog).toBeHidden({ timeout: 5000 })
+}
+
+// Click alert dialog secondary action (like "Resend verification email")
+export async function clickAlertDialogSecondaryAction(page: Page, buttonText: string) {
+  const dialog = page.locator('[role="alertdialog"]')
+  const secondaryButton = dialog.getByRole("button", { name: buttonText })
+  await expect(secondaryButton).toBeVisible()
+  await secondaryButton.click()
+  
+  // Wait for dialog to close
+  await expect(dialog).toBeHidden({ timeout: 5000 })
+}
+
+// Simulate clicking email verification link (mock the token verification)
+export async function simulateEmailVerification(page: Page, email: string) {
+  // For testing purposes, we'll skip the actual email verification
+  // In a real test environment, you'd either:
+  // 1. Use a test email service to extract the real verification token
+  // 2. Create a test API endpoint to directly verify the user
+  // 3. Mock the database to mark the user as verified
+  
+  // For now, we'll note that this user should be considered verified
+  console.log(`Mock verification completed for: ${email}`)
+  
+  // In a complete test setup, you might make an API call to mark user as verified:
+  // await page.request.post('/api/test/verify-user', { data: { email } })
+}
+
+// Check if user email is verified by trying to sign in
+export async function checkEmailVerificationStatus(page: Page, user: TestUser): Promise<'verified' | 'not-verified' | 'error'> {
+  await navigateToSignIn(page)
+  await fillSignInForm(page, user)
+  
+  // Submit form
+  await page.click('button:text("Sign in")')
+  
+  // Wait for response
+  await page.waitForTimeout(3000)
+  
+  // Check for different outcomes
+  const dialog = page.locator('[role="alertdialog"]')
+  const isDialogVisible = await dialog.isVisible()
+  
+  if (isDialogVisible) {
+    const dialogText = await dialog.textContent()
+    if (dialogText?.toLowerCase().includes('not verified')) {
+      return 'not-verified'
+    } else {
+      return 'error'
+    }
+  }
+  
+  // If no dialog appears, check if we're still on sign-in page or redirected
+  const currentUrl = page.url()
+  if (currentUrl.includes('/sign-in')) {
+    // Still on sign-in page without error dialog - unexpected
+    return 'error'
+  } else if (currentUrl === 'http://localhost:3000/' || currentUrl.endsWith('/')) {
+    // Successfully redirected to homepage - user is verified
+    return 'verified'
+  }
+  
+  return 'error'
+}
+
+// Complete sign up and handle verification workflow
+export async function completeSignUpWithVerification(page: Page, user: TestUser) {
+  // Navigate to sign up
+  await navigateToSignUp(page)
+  
+  // Fill and submit form
+  await fillSignUpForm(page, user)
+  await page.click('button:text("Sign up")')
+  
+  // Wait for success dialog with actual message
+  const dialog = await waitForAlertDialog(page, "created")
+  await clickAlertDialogAction(page, "OK")
+  
+  // Return user for further testing
+  return user
+}

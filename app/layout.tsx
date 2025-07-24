@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages, getTranslations } from "next-intl/server"
 import "./globals.css"
 import MicrosoftClarity from "./metrics/MicrosoftClarity"
+import { AlertProvider } from "@/lib/use-alert"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations()
@@ -32,7 +33,9 @@ export default async function RootLayout({
       </head>
       <body className="">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <AlertProvider>
+            {children}
+          </AlertProvider>
         </NextIntlClientProvider>
         <MicrosoftClarity />
       </body>

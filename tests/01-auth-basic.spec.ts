@@ -1,5 +1,16 @@
 import { test, expect } from "@playwright/test"
-import { generateTestUser } from "./utils"
+import {
+  generateTestUser,
+  navigateToSignUp,
+  navigateToSignIn,
+  fillSignUpForm,
+  fillSignInForm,
+  waitForAlertDialog,
+  clickAlertDialogAction,
+  clickAlertDialogSecondaryAction,
+  checkEmailVerificationStatus,
+  completeSignUpWithVerification,
+} from "./utils"
 
 test.describe("Basic Auth Tests", () => {
   test("should display sign-up form correctly", async ({ page }) => {
@@ -36,10 +47,12 @@ test.describe("Basic Auth Tests", () => {
     // Submit the form
     await page.click('button:text("Sign up")')
 
-    // Wait for either success or error
-    await page.waitForTimeout(3000)
+    // Wait for success dialog to appear
+    await waitForAlertDialog(page, "created")
 
-    // The test passes if no error occurs
+    // Click OK to dismiss the dialog
+    await clickAlertDialogAction(page, "OK")
+
     console.log("Sign up completed for:", testUser.email)
   })
 
@@ -86,5 +99,132 @@ test.describe("Basic Auth Tests", () => {
     await expect(submitButton).toBeDisabled()
 
     console.log("Loading state test completed for:", testUser.email)
+  })
+
+  test("should complete full email verification workflow", async ({ page }) => {
+    const testUser = generateTestUser()
+
+    // Step 1: Sign up user
+    await navigateToSignUp(page)
+    await fillSignUpForm(page, testUser)
+    await page.click('button:text("Sign up")')
+
+    // Step 2: Verify success dialog appears with verification message
+    await waitForAlertDialog(page, "created")
+    await clickAlertDialogAction(page, "OK")
+
+    // Step 3: Try to sign in before verification - should fail
+    const status = await checkEmailVerificationStatus(page, testUser)
+    expect(status).toBe("not-verified")
+
+    // Step 4: Verify "Resend verification email" button appears in error dialog
+    await navigateToSignIn(page)
+    await fillSignInForm(page, testUser)
+    await page.click('button:text("Sign in")')
+
+    const errorDialog = await waitForAlertDialog(page, "not verified")
+    const resendButton = errorDialog.getByRole("button", {
+      name: "Resend verification email",
+    })
+    await expect(resendButton).toBeVisible()
+
+    console.log(
+      "Email verification workflow test completed for:",
+      testUser.email
+    )
+  })
+
+  test("should show resend verification email functionality", async ({
+    page,
+  }) => {
+    const testUser = generateTestUser()
+
+    // Sign up user first
+    await completeSignUpWithVerification(page, testUser)
+
+    // Try to sign in with unverified email
+    await navigateToSignIn(page)
+    await fillSignInForm(page, testUser)
+    await page.click('button:text("Sign in")')
+
+    // Wait for error dialog with resend option
+    await waitForAlertDialog(page, "not verified")
+
+    // Click resend verification email button
+    await clickAlertDialogSecondaryAction(page, "Resend verification email")
+
+    // Should show success message
+    await waitForAlertDialog(page, "sent")
+    await clickAlertDialogAction(page, "OK")
+
+    console.log("Resend verification email test completed for:", testUser.email)
+  })
+
+  test("should show proper email verification flow", async ({ page }) => {
+    const testUser = generateTestUser()
+
+    // Step 1: Complete sign up
+    await completeSignUpWithVerification(page, testUser)
+
+    // Step 2: Try to sign in without verification - should show error with resend button
+    await navigateToSignIn(page)
+    await fillSignInForm(page, testUser)
+    await page.click('button:text("Sign in")')
+
+    // Step 3: Should show error dialog with resend verification option
+    const errorDialog = await waitForAlertDialog(page)
+    const resendButton = errorDialog.getByRole("button", {
+      name: "Resend verification email",
+    })
+    await expect(resendButton).toBeVisible()
+
+    // Step 4: Test that resend button works
+    await clickAlertDialogSecondaryAction(page, "Resend verification email")
+
+    // Step 5: Should show success message
+    await waitForAlertDialog(page, "sent")
+    await clickAlertDialogAction(page, "OK")
+
+    console.log("Email verification flow test completed for:", testUser.email)
+  })
+
+  test("should handle form validation errors", async ({ page }) => {
+    await navigateToSignUp(page)
+
+    // Try to submit empty form
+    await page.click('button:text("Sign up")')
+
+    // Should show validation errors (form should not submit)
+    await page.waitForTimeout(1000)
+
+    // Check that we're still on sign-up page
+    expect(page.url()).toContain("/sign-up")
+
+    // Fill in mismatched passwords
+    await page.fill('input[name="name"]', "Test User")
+    await page.fill('input[name="email"]', "test@example.com")
+    await page.fill('input[name="password"]', "password123")
+    await page.fill('input[name="confirmPassword"]', "differentpassword")
+
+    await page.click('button:text("Sign up")')
+
+    // Should still be on sign-up page due to validation error
+    await page.waitForTimeout(1000)
+    expect(page.url()).toContain("/sign-up")
+
+    console.log("Form validation test completed")
+  })
+
+  test("should navigate to forgot password page", async ({ page }) => {
+    await navigateToSignIn(page)
+
+    // Click forgot password link
+    await page.click('a[href="/forgot-password"]')
+    await page.waitForURL("/forgot-password")
+
+    // Verify we're on forgot password page
+    expect(page.url()).toContain("/forgot-password")
+
+    console.log("Forgot password navigation test completed")
   })
 })

@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
-import { resetPasswordSchema } from "@/lib/zod"
+import { createResetPasswordSchema } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useState } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+import { useAlert } from "@/lib/use-alert"
 import { z } from "zod"
 import { useTranslations } from "next-intl"
 
@@ -27,6 +27,9 @@ function ResetPasswordContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get("error")
   const [isPending, setIsPending] = useState(false)
+  const { showError, showSuccess } = useAlert()
+  
+  const resetPasswordSchema = createResetPasswordSchema(t)
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -43,9 +46,9 @@ function ResetPasswordContent() {
       token: searchParams.get("token")!,
     })
     if (error) {
-      toast.error(`xxx => ${error.message}`)
+      showError(error.message || t("something-went-wrong"))
     } else {
-      toast.success(t("password-reset-success"))
+      showSuccess(t("password-reset-success"))
       router.push("/sign-in")
     }
     setIsPending(false)

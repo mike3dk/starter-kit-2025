@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signInSchema } from "@/lib/zod"
+import { createSignInSchema } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -20,7 +20,7 @@ import { authClient } from "@/lib/auth-client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { toast } from "sonner"
+import { useAlert } from "@/lib/use-alert"
 
 import { ErrorContext } from "@better-fetch/fetch"
 import { Github } from "lucide-react"
@@ -31,6 +31,9 @@ export default function PageSignIn() {
   const router = useRouter()
   const [pendingCredentials, setPendingCredentials] = useState(false)
   const [pendingGithub, setPendingGithub] = useState(false)
+  const { showError, showSuccess } = useAlert()
+  
+  const signInSchema = createSignInSchema(t)
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -39,6 +42,15 @@ export default function PageSignIn() {
       password: "",
     },
   })
+
+  const handleResendVerification = async (email: string) => {
+    try {
+      await authClient.sendVerificationEmail({ email })
+      showSuccess(t("verification-email-sent"))
+    } catch {
+      showError(t("failed-to-send-verification"))
+    }
+  }
 
   const handleCredentialsSignIn = async (
     values: z.infer<typeof signInSchema>
@@ -58,7 +70,17 @@ export default function PageSignIn() {
         },
         onError: (ctx: ErrorContext) => {
           console.log(ctx)
-          toast.error(ctx.error.message ?? t("something-went-wrong"))
+          const isEmailNotVerified = ctx.error.message?.toLowerCase().includes("not verified") || 
+                                   ctx.error.message?.toLowerCase().includes("email is not verified")
+          
+          if (isEmailNotVerified) {
+            showError(ctx.error.message ?? t("something-went-wrong"), {
+              secondaryActionText: t("resend-verification-email"),
+              onSecondaryAction: () => handleResendVerification(values.email)
+            })
+          } else {
+            showError(ctx.error.message ?? t("something-went-wrong"))
+          }
         },
       }
     )
@@ -79,7 +101,7 @@ export default function PageSignIn() {
           router.refresh()
         },
         onError: (ctx: ErrorContext) => {
-          toast.error(ctx.error.message ?? t("something-went-wrong"))
+          showError(ctx.error.message ?? t("something-went-wrong"))
         },
       }
     )

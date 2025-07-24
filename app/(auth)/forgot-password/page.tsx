@@ -12,17 +12,20 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
-import { forgotPasswordSchema } from "@/lib/zod"
+import { createForgotPasswordSchema } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+import { useAlert } from "@/lib/use-alert"
 import { z } from "zod"
 import { useTranslations } from "next-intl"
 
 export default function PageForgotPassword() {
   const t = useTranslations()
   const [isPending, setIsPending] = useState(false)
+  const { showAlert, showError } = useAlert()
+  
+  const forgotPasswordSchema = createForgotPasswordSchema(t)
 
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -39,9 +42,9 @@ export default function PageForgotPassword() {
     })
 
     if (error) {
-      toast.error(error.message)
+      showError(error.message || t("something-went-wrong"))
     } else {
-      toast(t("reset-link-sent"))
+      showAlert({ description: t("reset-link-sent") })
     }
     setIsPending(false)
   }

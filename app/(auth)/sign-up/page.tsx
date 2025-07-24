@@ -12,18 +12,21 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
-import { signUpSchema } from "@/lib/zod"
+import { createSignUpSchema } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+import { useAlert } from "@/lib/use-alert"
 import { z } from "zod"
 import { useTranslations } from "next-intl"
 
 export default function PageSignUp() {
   const t = useTranslations()
   const [pending, setPending] = useState(false)
+  const { showAlert, showError } = useAlert()
+  
+  const signUpSchema = createSignUpSchema(t)
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -47,11 +50,11 @@ export default function PageSignUp() {
           setPending(true)
         },
         onSuccess: () => {
-          toast(t("account-created-verify-email"))
+          showAlert({ description: t("account-created-verify-email") })
         },
         onError: (ctx) => {
           console.log("error", ctx)
-          toast.error(ctx.error.message ?? t("something-went-wrong"))
+          showError(ctx.error.message ?? t("something-went-wrong"))
         },
       }
     )

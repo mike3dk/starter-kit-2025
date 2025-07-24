@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-import { toast } from "sonner"
+import { useAlert } from "@/lib/use-alert"
 
 interface ImpersonateUserProps {
   userId: string
@@ -11,6 +11,7 @@ interface ImpersonateUserProps {
 
 export default function ImpersonateUser({ userId }: ImpersonateUserProps) {
   const router = useRouter()
+  const { showSuccess } = useAlert()
 
   const handleImpersonateUser = async () => {
     try {
@@ -18,9 +19,7 @@ export default function ImpersonateUser({ userId }: ImpersonateUserProps) {
         userId: userId,
       })
       router.push("/")
-      toast.success("Impersonated user\nYou are now impersonating this user", {
-        duration: 5000,
-      })
+      showSuccess("Impersonated user\nYou are now impersonating this user")
       router.refresh()
     } catch (error) {
       console.error("Failed to impersonate user:", error)
