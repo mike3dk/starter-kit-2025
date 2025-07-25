@@ -78,7 +78,7 @@ export default function PageForgotPassword() {
                   </FormItem>
                 )}
               />
-              <LoadingButton pending={isPending}>
+              <LoadingButton pending={isPending} data-testid="send-reset-link-button">
                 {t("send-reset-link")}
               </LoadingButton>
             </form>

@@ -54,7 +54,10 @@ export default function PageSignUp() {
         },
         onError: (ctx) => {
           console.log("error", ctx)
-          showError(ctx.error.message ?? t("something-went-wrong"))
+          const errorMessage = ctx.error.message?.toLowerCase().includes("user already exists") 
+            ? t("user-already-exists")
+            : ctx.error.message ?? t("something-went-wrong")
+          showError(errorMessage)
         },
       }
     )
@@ -117,7 +120,7 @@ export default function PageSignUp() {
                   )}
                 />
               ))}
-              <LoadingButton pending={pending}>{t("sign-up")}</LoadingButton>
+              <LoadingButton pending={pending} data-testid="sign-up-button">{t("sign-up")}</LoadingButton>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">

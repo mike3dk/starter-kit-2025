@@ -122,7 +122,7 @@ function ResetPasswordContent() {
                 )}
               />
 
-              <LoadingButton pending={isPending}>
+              <LoadingButton pending={isPending} data-testid="reset-password-button">
                 {t("reset-password")}
               </LoadingButton>
             </form>

@@ -145,7 +145,7 @@ export default function PageSignIn() {
                   )}
                 />
               ))}
-              <LoadingButton pending={pendingCredentials}>
+              <LoadingButton pending={pendingCredentials} data-testid="sign-in-button">
                 {t("sign-in")}
               </LoadingButton>
             </form>
