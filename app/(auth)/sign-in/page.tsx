@@ -74,12 +74,15 @@ export default function PageSignIn() {
                                    ctx.error.message?.toLowerCase().includes("email is not verified")
           
           if (isEmailNotVerified) {
-            showError(ctx.error.message ?? t("something-went-wrong"), {
+            showError(t("email-not-verified"), {
               secondaryActionText: t("resend-verification-email"),
               onSecondaryAction: () => handleResendVerification(values.email)
             })
           } else {
-            showError(ctx.error.message ?? t("something-went-wrong"))
+            const errorMessage = ctx.error.message?.toLowerCase().includes("invalid email or password")
+              ? t("invalid-email-or-password")
+              : ctx.error.message ?? t("something-went-wrong")
+            showError(errorMessage)
           }
         },
       }
@@ -145,7 +148,7 @@ export default function PageSignIn() {
                   )}
                 />
               ))}
-              <LoadingButton pending={pendingCredentials}>
+              <LoadingButton pending={pendingCredentials} data-testid="sign-in-button">
                 {t("sign-in")}
               </LoadingButton>
             </form>

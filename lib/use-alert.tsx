@@ -96,7 +96,7 @@ export function AlertProvider({ children }: { children: ReactNode }) {
               </AlertDialogCancel>
             )}
             <AlertDialogAction onClick={handleAction}>
-              {alertOptions.actionText || "OK"}
+              {alertOptions.actionText || t("ok")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -15,6 +15,7 @@ import { authClient } from "@/lib/auth-client"
 import { createSignUpSchema } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useAlert } from "@/lib/use-alert"
@@ -23,9 +24,10 @@ import { useTranslations } from "next-intl"
 
 export default function PageSignUp() {
   const t = useTranslations()
+  const router = useRouter()
   const [pending, setPending] = useState(false)
   const { showAlert, showError } = useAlert()
-  
+
   const signUpSchema = createSignUpSchema(t)
 
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -50,11 +52,21 @@ export default function PageSignUp() {
           setPending(true)
         },
         onSuccess: () => {
-          showAlert({ description: t("account-created-verify-email") })
+          showAlert({
+            title: t("success"),
+            description: t("account-created-verify-email"),
+            actionText: t("ok"),
+            onAction: () => router.push("/sign-in")
+          })
         },
         onError: (ctx) => {
           console.log("error", ctx)
-          showError(ctx.error.message ?? t("something-went-wrong"))
+          const errorMessage = ctx.error.message
+            ?.toLowerCase()
+            .includes("user already exists")
+            ? t("user-already-exists")
+            : (ctx.error.message ?? t("something-went-wrong"))
+          showError(errorMessage)
         },
       }
     )
@@ -117,7 +129,9 @@ export default function PageSignUp() {
                   )}
                 />
               ))}
-              <LoadingButton pending={pending}>{t("sign-up")}</LoadingButton>
+              <LoadingButton pending={pending} data-testid="sign-up-button">
+                {t("sign-up")}
+              </LoadingButton>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">

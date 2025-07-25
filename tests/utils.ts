@@ -173,7 +173,7 @@ export async function checkEmailVerificationStatus(page: Page, user: TestUser): 
   await fillSignInForm(page, user)
   
   // Submit form
-  await page.click('button:text("Sign in")')
+  await page.getByTestId('sign-in-button').click()
   
   // Wait for response
   await page.waitForTimeout(3000)
@@ -183,8 +183,22 @@ export async function checkEmailVerificationStatus(page: Page, user: TestUser): 
   const isDialogVisible = await dialog.isVisible()
   
   if (isDialogVisible) {
-    const dialogText = await dialog.textContent()
-    if (dialogText?.toLowerCase().includes('not verified')) {
+    const dialogText = await dialog.textContent() || ''
+    const lowerText = dialogText.toLowerCase()
+    
+    // Check for "not verified" in multiple languages
+    const notVerifiedKeywords = [
+      'not verified',     // English
+      '인증되지',          // Korean - "not verified"  
+      'verify',           // General verification keyword
+      '인증'              // Korean - "verification"
+    ]
+    
+    const isNotVerified = notVerifiedKeywords.some(keyword => 
+      lowerText.includes(keyword.toLowerCase())
+    )
+    
+    if (isNotVerified) {
       return 'not-verified'
     } else {
       return 'error'
@@ -211,7 +225,7 @@ export async function completeSignUpWithVerification(page: Page, user: TestUser)
   
   // Fill and submit form
   await fillSignUpForm(page, user)
-  await page.click('button:text("Sign up")')
+  await page.getByTestId('sign-up-button').click()
   
   // Wait for success dialog with actual message
   const dialog = await waitForAlertDialog(page, "created")
@@ -219,4 +233,12 @@ export async function completeSignUpWithVerification(page: Page, user: TestUser)
   
   // Return user for further testing
   return user
+}
+
+// Setup mocks that should be applied to all tests
+export async function setupTestMocks(_page: Page) {
+  // Email mocking is now handled at the lib/email.ts level via PLAYWRIGHT_TEST env var
+  console.log('Test mocks configured for page')
+  
+  // You can add other mocks here if needed in the future
 }
