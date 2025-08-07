@@ -33,9 +33,7 @@ export default async function RootLayout({
       </head>
       <body className="">
         <NextIntlClientProvider messages={messages}>
-          <AlertProvider>
-            {children}
-          </AlertProvider>
+          <AlertProvider>{children}</AlertProvider>
         </NextIntlClientProvider>
         <MicrosoftClarity />
       </body>

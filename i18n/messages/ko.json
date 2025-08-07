@@ -40,14 +40,14 @@
   "email-verified-message": "이메일이 성공적으로 인증되었습니다.",
   "go-to-home": "홈으로 가기",
   "enter-new-password": "새 비밀번호를 입력하세요",
-  
+
   "error": "오류",
   "success": "성공",
   "ok": "확인",
   "resend-verification-email": "인증 이메일 재전송",
   "verification-email-sent": "인증 이메일이 전송되었습니다! 받은편지함을 확인해주세요.",
   "failed-to-send-verification": "인증 이메일 전송에 실패했습니다. 다시 시도해주세요.",
-  
+
   "please-enter-valid-email": "유효한 이메일 주소를 입력해주세요",
   "password-min-8-chars": "비밀번호는 최소 8자 이상이어야 합니다",
   "name-min-2-chars": "이름은 최소 2자 이상이어야 합니다",

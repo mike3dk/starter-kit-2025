@@ -28,7 +28,7 @@ function ResetPasswordContent() {
   const error = searchParams.get("error")
   const [isPending, setIsPending] = useState(false)
   const { showError, showSuccess } = useAlert()
-  
+
   const resetPasswordSchema = createResetPasswordSchema(t)
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -122,7 +122,10 @@ function ResetPasswordContent() {
                 )}
               />
 
-              <LoadingButton pending={isPending} data-testid="reset-password-button">
+              <LoadingButton
+                pending={isPending}
+                data-testid="reset-password-button"
+              >
                 {t("reset-password")}
               </LoadingButton>
             </form>

@@ -40,14 +40,14 @@
   "email-verified-message": "Your email has been successfully verified.",
   "go-to-home": "Go to home",
   "enter-new-password": "Enter your new password",
-  
+
   "error": "Error",
   "success": "Success",
   "ok": "OK",
   "resend-verification-email": "Resend verification email",
   "verification-email-sent": "Verification email sent! Check your inbox.",
   "failed-to-send-verification": "Failed to send verification email. Please try again.",
-  
+
   "please-enter-valid-email": "Please enter a valid email address",
   "password-min-8-chars": "Password must be at least 8 characters long",
   "name-min-2-chars": "Name must be at least 2 characters long",

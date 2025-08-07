@@ -1,36 +1,40 @@
 import { z } from "zod"
 
 // Factory functions to create schemas with translated messages
-export const createSignInSchema = (t: (key: string) => string) => z.object({
-  email: z.string().email(t("please-enter-valid-email")),
-  password: z.string().min(8, t("password-min-8-chars")),
-})
-
-export const createSignUpSchema = (t: (key: string) => string) => z
-  .object({
-    name: z.string().min(2, t("name-min-2-chars")),
+export const createSignInSchema = (t: (key: string) => string) =>
+  z.object({
     email: z.string().email(t("please-enter-valid-email")),
     password: z.string().min(8, t("password-min-8-chars")),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: t("passwords-dont-match"),
-    path: ["confirmPassword"],
   })
 
-export const createForgotPasswordSchema = (t: (key: string) => string) => z.object({
-  email: z.string().email(t("please-enter-valid-email")),
-})
+export const createSignUpSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      name: z.string().min(2, t("name-min-2-chars")),
+      email: z.string().email(t("please-enter-valid-email")),
+      password: z.string().min(8, t("password-min-8-chars")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("passwords-dont-match"),
+      path: ["confirmPassword"],
+    })
 
-export const createResetPasswordSchema = (t: (key: string) => string) => z
-  .object({
-    password: z.string().min(8, t("password-min-8-chars")),
-    confirmPassword: z.string(),
+export const createForgotPasswordSchema = (t: (key: string) => string) =>
+  z.object({
+    email: z.string().email(t("please-enter-valid-email")),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: t("passwords-dont-match"),
-    path: ["confirmPassword"],
-  })
+
+export const createResetPasswordSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      password: z.string().min(8, t("password-min-8-chars")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("passwords-dont-match"),
+      path: ["confirmPassword"],
+    })
 
 // Legacy exports for backward compatibility (with English messages)
 export const signInSchema = z.object({

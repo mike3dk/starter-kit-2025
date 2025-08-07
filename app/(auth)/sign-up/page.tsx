@@ -56,7 +56,7 @@ export default function PageSignUp() {
             title: t("success"),
             description: t("account-created-verify-email"),
             actionText: t("ok"),
-            onAction: () => router.push("/sign-in")
+            onAction: () => router.push("/sign-in"),
           })
         },
         onError: (ctx) => {

@@ -24,7 +24,7 @@ export default function PageForgotPassword() {
   const t = useTranslations()
   const [isPending, setIsPending] = useState(false)
   const { showAlert, showError } = useAlert()
-  
+
   const forgotPasswordSchema = createForgotPasswordSchema(t)
 
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
@@ -78,7 +78,10 @@ export default function PageForgotPassword() {
                   </FormItem>
                 )}
               />
-              <LoadingButton pending={isPending} data-testid="send-reset-link-button">
+              <LoadingButton
+                pending={isPending}
+                data-testid="send-reset-link-button"
+              >
                 {t("send-reset-link")}
               </LoadingButton>
             </form>

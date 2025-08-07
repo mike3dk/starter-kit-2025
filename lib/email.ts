@@ -34,14 +34,14 @@ export async function sendEmail({
   html,
 }: EmailOptions): Promise<EmailResult> {
   // Mock email sending during tests
-  if (process.env.PLAYWRIGHT_TEST === 'true') {
+  if (process.env.PLAYWRIGHT_TEST === "true") {
     console.log(`[TEST MOCK] Email would be sent to: ${to}`)
     console.log(`[TEST MOCK] Subject: ${subject}`)
     console.log(`[TEST MOCK] Text: ${text}`)
-    
+
     return {
       success: true,
-      messageId: `mock-email-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
+      messageId: `mock-email-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     }
   }
 

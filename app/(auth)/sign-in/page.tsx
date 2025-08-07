@@ -32,7 +32,7 @@ export default function PageSignIn() {
   const [pendingCredentials, setPendingCredentials] = useState(false)
   const [pendingGithub, setPendingGithub] = useState(false)
   const { showError, showSuccess } = useAlert()
-  
+
   const signInSchema = createSignInSchema(t)
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -70,18 +70,21 @@ export default function PageSignIn() {
         },
         onError: (ctx: ErrorContext) => {
           console.log(ctx)
-          const isEmailNotVerified = ctx.error.message?.toLowerCase().includes("not verified") || 
-                                   ctx.error.message?.toLowerCase().includes("email is not verified")
-          
+          const isEmailNotVerified =
+            ctx.error.message?.toLowerCase().includes("not verified") ||
+            ctx.error.message?.toLowerCase().includes("email is not verified")
+
           if (isEmailNotVerified) {
             showError(t("email-not-verified"), {
               secondaryActionText: t("resend-verification-email"),
-              onSecondaryAction: () => handleResendVerification(values.email)
+              onSecondaryAction: () => handleResendVerification(values.email),
             })
           } else {
-            const errorMessage = ctx.error.message?.toLowerCase().includes("invalid email or password")
+            const errorMessage = ctx.error.message
+              ?.toLowerCase()
+              .includes("invalid email or password")
               ? t("invalid-email-or-password")
-              : ctx.error.message ?? t("something-went-wrong")
+              : (ctx.error.message ?? t("something-went-wrong"))
             showError(errorMessage)
           }
         },
@@ -148,7 +151,10 @@ export default function PageSignIn() {
                   )}
                 />
               ))}
-              <LoadingButton pending={pendingCredentials} data-testid="sign-in-button">
+              <LoadingButton
+                pending={pendingCredentials}
+                data-testid="sign-in-button"
+              >
                 {t("sign-in")}
               </LoadingButton>
             </form>
