@@ -16,7 +16,7 @@ class URLRequest(BaseModel):
 # Define a route at the root web address ("/")
 @app.get("/")
 def api_read_root():
-    return {"message": "Hello, MealPuzzler!"}
+    return {"message": "Hello, Starter Kit 2025!"}
 
 
 @app.post("/rqjobs")
