@@ -1,20 +1,25 @@
 stages:
   - test
+  - deploy
 
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
 
 test:
   stage: test
   image: nikolaik/python-nodejs:python3.11-nodejs22
   services:
     - name: postgres:17-alpine
+    - name: redis:7-alpine
   variables:
-    POSTGRES_DB: mealpuzzler
+    POSTGRES_DB: lyntour
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
     POSTGRES_HOST_AUTH_METHOD: trust
+    REDIS_URL: redis://redis:6379
+    BETTER_AUTH_SECRET: test-secret-for-ci-only
   script: |
     poetry install
     export DATABASE_URL="postgresql://postgres:postgres@postgres/mealpuzzler"
@@ -26,4 +31,15 @@ test:
     npx prisma db pull
     npx prisma generate --generator client-js 
     npm run build
+    poetry run pytest
     # npx playwright test
+
+trigger_jenkins:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - curl -X POST "https://jenkins.starliz.com/generic-webhook-trigger/invoke?token=Ea43Pgag&app=20-starter"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  needs:
+    - test

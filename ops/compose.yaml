@@ -1,7 +1,27 @@
-name: 27-mealpuzzler
+name: 20-starter
 services:
+  nextjs:
+    container_name: starter-nextjs
+    restart: always
+    network_mode: host
+    image: nextjs
+    build:
+      network: host
+      context: ../
+      dockerfile: ops/Dockerfile.nextjs
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+        - NEXT_PUBLIC_FASTAPI_SERVER=${NEXT_PUBLIC_FASTAPI_SERVER}
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+    env_file:
+      - ../.env
+    volumes:
+      - tmp:/app/tmp
+
   fastapi:
-    container_name: python
+    container_name: starter-fastapi
     restart: always
     network_mode: host
     image: python
@@ -25,8 +45,8 @@ services:
       - --port
       - ${NEXT_PUBLIC_FASTAPI_PORT}
 
-  python-rq:
-    container_name: python-rq
+  rq:
+    container_name: starter-rq
     restart: always
     network_mode: host
     image: python
@@ -46,26 +66,6 @@ services:
       - rq
       - worker
       - --with-scheduler
-
-  nextjs:
-    container_name: nextjs
-    restart: always
-    network_mode: host
-    image: nextjs
-    build:
-      network: host
-      context: ../
-      dockerfile: ops/Dockerfile.nextjs
-      args:
-        - DATABASE_URL=${DATABASE_URL}
-        - NEXT_PUBLIC_FASTAPI_SERVER=${NEXT_PUBLIC_FASTAPI_SERVER}
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
-    env_file:
-      - ../.env
-    volumes:
-      - tmp:/app/tmp
 
 volumes:
   tmp:
