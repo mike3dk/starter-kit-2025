@@ -1,0 +1,73 @@
+name: 00-starter
+services:
+  nextjs:
+    container_name: starter-nextjs
+    restart: always
+    network_mode: host
+    image: nextjs
+    build:
+      network: host
+      context: ../
+      dockerfile: ops/Dockerfile.nextjs
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+        - NEXT_PUBLIC_NEXTJS_PORT=${NEXT_PUBLIC_NEXTJS_PORT}
+        - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+    environment:
+      - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+    volumes:
+      - tmp:/app/tmp
+
+  fastapi:
+    container_name: starter-fastapi
+    restart: always
+    network_mode: host
+    image: python
+    build:
+      network: host
+      context: ../
+      dockerfile: ops/Dockerfile.python
+    environment:
+      - PYTHONPATH=/app
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+    volumes:
+      - tmp:/app/tmp
+    command:
+      [
+        "uvicorn",
+        "src.fastapi.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "${NEXT_PUBLIC_FASTAPI_PORT:-40491}",
+        "--workers",
+        "1",
+      ]
+
+  rq:
+    container_name: starter-rq
+    restart: always
+    network_mode: host
+    image: python
+    build:
+      network: host
+      context: ../
+      dockerfile: ops/Dockerfile.python
+    environment:
+      - PYTHONPATH=/app
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+    volumes:
+      - tmp:/app/tmp
+    command: ["rq", "worker", "--url", "${REDIS_RQ_URL}"]
+
+volumes:
+  tmp:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "../tmp"

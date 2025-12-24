@@ -1,34 +1,26 @@
-name: 00-starter
+name: 29-starter-kit-2025
 services:
   nextjs:
-    container_name: starter-nextjs
+    container_name: starter-kit-nextjs
     restart: always
     network_mode: host
-    image: nextjs
-    build:
-      network: host
-      context: ../
-      dockerfile: ops/Dockerfile.nextjs
-      args:
-        - DATABASE_URL=${DATABASE_URL}
-        - NEXT_PUBLIC_FASTAPI_SERVER=${NEXT_PUBLIC_FASTAPI_SERVER}
+    image: registry.gitlab.com/starliz/prod/29-starter-kit-2025/nextjs:latest
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=${REDIS_URL}
+      - NEXT_PUBLIC_NEXTJS_PORT=${NEXT_PUBLIC_NEXTJS_PORT}
+      - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
     env_file:
       - ../.env
     volumes:
       - tmp:/app/tmp
 
   fastapi:
-    container_name: starter-fastapi
+    container_name: starter-kit-fastapi
     restart: always
     network_mode: host
-    image: python
-    build:
-      network: host
-      context: ../
-      dockerfile: ops/Dockerfile.python
+    image: registry.gitlab.com/starliz/prod/29-starter-kit-2025/python:latest
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=${REDIS_URL}
@@ -46,14 +38,9 @@ services:
       - ${NEXT_PUBLIC_FASTAPI_PORT}
 
   rq:
-    container_name: starter-rq
     restart: always
     network_mode: host
-    image: python
-    build:
-      network: host
-      context: ../
-      dockerfile: ops/Dockerfile.python
+    image: registry.gitlab.com/starliz/prod/29-starter-kit-2025/python:latest
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=${REDIS_URL}
@@ -66,6 +53,8 @@ services:
       - rq
       - worker
       - --with-scheduler
+    deploy:
+      replicas: 2
 
 volumes:
   tmp:

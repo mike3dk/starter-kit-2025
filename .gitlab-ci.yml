@@ -1,5 +1,6 @@
 stages:
   - test
+  - build
   - deploy
 
 workflow:
@@ -29,17 +30,78 @@ test:
     npm i
     npx prettier --check .
     npx prisma db pull
-    npx prisma generate --generator client-js 
+    npx prisma generate --generator client-js
     npm run build
     poetry run pytest
     # npx playwright test
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+
+build-nextjs:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  before_script:
+    - until docker info; do sleep 1; done
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - echo "DATABASE_URL=$DATABASE_URL"
+    - echo "NEXT_PUBLIC_NEXTJS_PORT=$NEXT_PUBLIC_NEXTJS_PORT"
+    - echo "NEXT_PUBLIC_FASTAPI_PORT=$NEXT_PUBLIC_FASTAPI_PORT"
+    - echo "NEXT_PUBLIC_FASTAPI_SERVER=$NEXT_PUBLIC_FASTAPI_SERVER"
+    - echo "NEXT_PUBLIC_BETTER_AUTH_URL=$NEXT_PUBLIC_BETTER_AUTH_URL"
+    - echo "BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:0:10}..."
+    - >
+      docker build -f ops/Dockerfile.nextjs
+      --build-arg DATABASE_URL="$DATABASE_URL"
+      --build-arg NEXT_PUBLIC_NEXTJS_PORT="$NEXT_PUBLIC_NEXTJS_PORT"
+      --build-arg NEXT_PUBLIC_FASTAPI_PORT="$NEXT_PUBLIC_FASTAPI_PORT"
+      --build-arg NEXT_PUBLIC_FASTAPI_SERVER="$NEXT_PUBLIC_FASTAPI_SERVER"
+      --build-arg NEXT_PUBLIC_BETTER_AUTH_URL="$NEXT_PUBLIC_BETTER_AUTH_URL"
+      --build-arg BETTER_AUTH_SECRET="$BETTER_AUTH_SECRET"
+      -t $CI_REGISTRY_IMAGE/nextjs:latest -t $CI_REGISTRY_IMAGE/nextjs:$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY_IMAGE/nextjs:latest
+    - docker push $CI_REGISTRY_IMAGE/nextjs:$CI_COMMIT_SHA
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  needs:
+    - test
+
+build-python:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  before_script:
+    - until docker info; do sleep 1; done
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker build -f ops/Dockerfile.python -t $CI_REGISTRY_IMAGE/python:latest -t $CI_REGISTRY_IMAGE/python:$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY_IMAGE/python:latest
+    - docker push $CI_REGISTRY_IMAGE/python:$CI_COMMIT_SHA
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  needs:
+    - test
 
 trigger_jenkins:
   stage: deploy
   image: curlimages/curl:latest
   script:
-    - curl -X POST "https://jenkins.starliz.com/generic-webhook-trigger/invoke?token=Ea43Pgag&app=20-starter"
+    - curl -X POST "https://jenkins.starliz.com/generic-webhook-trigger/invoke?token=Ea43Pgag&app=29-starter-kit-2025"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
   needs:
-    - test
+    - build-nextjs
+    - build-python

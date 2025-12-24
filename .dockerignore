@@ -1,0 +1,68 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+.Python
+.venv
+venv
+ENV
+.pytest_cache
+
+# Build outputs
+.next
+out
+build
+dist
+*.egg-info
+
+# Testing
+coverage
+.nyc_output
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.docker
+
+# CI/CD
+.gitlab-ci.yml
+.github
+
+# Environment files (handled separately)
+.env
+.env.*
+!.env.example
+
+# Misc
+*.log
+*.md
+!README.md
+.DS_Store
+Thumbs.db
+tmp
+*.tmp
+
+# Playwright
+playwright-report
+test-results
+
+# Prisma migrations (not needed at runtime)
+prisma/migrations
+
+# Documentation
+docs
