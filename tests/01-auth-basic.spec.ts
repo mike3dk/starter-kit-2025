@@ -175,7 +175,12 @@ test.describe("Basic Auth Tests", () => {
     // Step 2: Try to sign in without verification - should show error with resend button
     await navigateToSignIn(page)
     await fillSignInForm(page, testUser)
-    await page.getByTestId("sign-in-button").click()
+
+    // Wait for sign-in API response before checking for dialog
+    const [signInResponse] = await Promise.all([
+      page.waitForResponse((resp) => resp.url().includes("/api/auth")),
+      page.getByTestId("sign-in-button").click(),
+    ])
 
     // Step 3: Should show error dialog with resend verification option
     const errorDialog = await waitForAlertDialog(page)

@@ -147,6 +147,10 @@ export async function clickAlertDialogAction(
 }
 
 // Click alert dialog secondary action (like "Resend verification email")
+// Note: The secondary action may trigger a new dialog immediately (e.g., resend
+// verification shows a success dialog), so we don't wait for the dialog to close.
+// Instead, we wait for the secondary button to detach, indicating the dialog
+// content has changed.
 export async function clickAlertDialogSecondaryAction(
   page: Page,
   buttonText: string
@@ -156,8 +160,8 @@ export async function clickAlertDialogSecondaryAction(
   await expect(secondaryButton).toBeVisible()
   await secondaryButton.click()
 
-  // Wait for dialog to close
-  await expect(dialog).toBeHidden({ timeout: 5000 })
+  // Wait for the secondary button to disappear (dialog content changed)
+  await expect(secondaryButton).toBeHidden({ timeout: 5000 })
 }
 
 // Simulate clicking email verification link (mock the token verification)

@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server"
 // Define private routes that require authentication
 const privateRoutes = ["/admin", "/app"]
 
-export default async function authMiddleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathName = request.nextUrl.pathname
 
   // Check if the current path is a private route

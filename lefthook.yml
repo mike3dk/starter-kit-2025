@@ -1,4 +1,4 @@
-# Lefthook configuration for infinite-inquiry
+# Lefthook configuration
 # https://lefthook.dev/configuration/
 # run `brew install lefthook` to install lefthook
 # then `lefthook install` to set up git hooks
@@ -6,17 +6,29 @@
 pre-push:
   parallel: true
   commands:
-    # Format JavaScript/TypeScript files with Prettier
-    lint-js:
+    # Check Python formatting with Ruff (matches CI)
+    ruff-format:
+      glob: "*.py"
+      run: ruff format . --check
+      fail_text: "Ruff formatting check failed. Run 'ruff format .' to fix formatting issues."
+
+    # Lint Python files with Ruff (matches CI)
+    ruff-check:
+      glob: "*.py"
+      run: ruff check .
+      fail_text: "Ruff linting failed. Run 'ruff check . --fix' to auto-fix issues, or fix them manually."
+
+    # Check Markdown formatting with Prettier
+    prettier-check:
       glob: "*.{js,ts,jsx,tsx,json,css,md}"
       run: npx prettier --check .
       fail_text: "Prettier linting failed. Please fix the issues and try again."
 
-    # Lint Python files with Ruff
-    lint-python:
-      glob: "*.py"
-      run: ruff check .
-      fail_text: "Ruff linting failed. Run 'ruff check --fix .' to auto-fix issues, or fix them manually."
+    # # Type check Python files with Pyright (matches CI)
+    # pyright:
+    #   glob: "*.py"
+    #   run: pyright
+    #   fail_text: "Pyright type checking failed. Please fix the type errors and try again."
 
     # Build Next.js app
     next-build:

@@ -1,4 +1,10 @@
 import { defineConfig, devices } from "@playwright/test"
+import dotenv from "dotenv"
+import path from "path"
+
+// Load .env with override to ensure .env values take precedence over
+// stale shell environment variables (e.g. from direnv)
+dotenv.config({ path: path.resolve(__dirname, ".env"), override: true })
 
 /**
  * @see https://playwright.dev/docs/test-configuration
