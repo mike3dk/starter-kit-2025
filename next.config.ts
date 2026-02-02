@@ -13,8 +13,8 @@ const cspHeader = [
   "font-src 'self'",
   // Different connect-src for dev vs production
   isDev
-    ? "connect-src 'self' http://localhost:3000 ws://localhost:3000 https://fastapi.mealpuzzler.com https://plausible.starliz.com"
-    : "connect-src 'self' https://fastapi.mealpuzzler.com https://plausible.starliz.com",
+    ? "connect-src 'self' http://localhost:3000 ws://localhost:3000 http://localhost:3001 https://plausible.starliz.com"
+    : "connect-src 'self' https://plausible.starliz.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

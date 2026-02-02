@@ -1,4 +1,4 @@
-name: 00-starter
+name: StarterKit
 services:
   nextjs:
     container_name: starter-nextjs

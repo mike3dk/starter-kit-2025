@@ -1,4 +1,4 @@
-# STARTER KIT 2025
+# StarterKit
 
 ## Description
 

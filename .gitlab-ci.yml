@@ -99,7 +99,7 @@ trigger_jenkins:
   stage: deploy
   image: curlimages/curl:latest
   script:
-    - curl -X POST "https://jenkins.starliz.com/generic-webhook-trigger/invoke?token=Ea43Pgag&app=29-starter-kit-2025"
+    - curl -X POST "https://jenkins.starliz.com/generic-webhook-trigger/invoke?token=Ea43Pgag&app=15-starter-kit-2025"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
   needs:
